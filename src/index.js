@@ -16,6 +16,9 @@ app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
 
 app.use('/', require('./routes/index'));
+app.get('*', function(req, res){
+    res.status(404).render('errors')
+})
 
 app.listen(PORT, async() => {
     console.log(`Server Started on port ${PORT}`);
