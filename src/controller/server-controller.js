@@ -3,7 +3,10 @@ exports.homepage = async(req, res) => {
         title: 'Notes App',
         description: 'Notes App using Node.JS'
     }
-    res.render('index', locals);
+    res.render('index', {
+        locals,
+        layout: '../views/layouts/home-page'
+    });
 }
 exports.about = async(req, res) => {
     const locals = {
