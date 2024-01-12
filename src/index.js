@@ -16,8 +16,9 @@ app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
 
 app.use('/', require('./routes/index'));
+app.use('/', require('./routes/dashboard'));
 app.get('*', function(req, res){
-    res.status(404).render('errors')
+    res.status(404).render('errors');
 })
 
 app.listen(PORT, async() => {
