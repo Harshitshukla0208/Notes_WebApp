@@ -16,7 +16,7 @@ exports.dashboard = async (req, res) => {
       return res.status(400).send('Invalid user ID');
     }
 
-    // Fetch all notes without pagination
+    // Fetch all notes
     const notes = await Note.find({})
       .sort({ createdAt: -1 })
       .exec();
@@ -27,7 +27,7 @@ exports.dashboard = async (req, res) => {
       body: _.truncate(note.body, { length: 100, separator: ' ' }),
     }));
 
-      console.log(truncatedNotes)
+      //console.log(truncatedNotes)
     // Count documents
     const count = await Note.countDocuments({ user: new mongoose.Types.ObjectId(userId) });
 
@@ -37,11 +37,39 @@ exports.dashboard = async (req, res) => {
       locals,
       notes: truncatedNotes || [],
       layout: '../views/layouts/dashboard',
-      current: 1, // Since there is no pagination, set current page to 1
-      pages: 1, // Since there is no pagination, set total pages to 1
+      current: 1, 
+      pages: 1, 
     });
   } catch (error) {
     console.error('Error in dashboard controller:', error);
     res.status(500).send('Internal Server Error');
   }
+}
+
+//view notes
+
+exports.dashboardViewNote = async (req, res) => {
+  const note = await Note.findById(req.params.id)
+    .where(req.user.id)
+    .lean();
+
+    console.log(note);
+  if (note) {
+    res.render("dashboard/view-notes", {
+      noteID: req.params.id,
+      note,
+      layout: "../views/layouts/dashboard",
+    });
+  } else {
+    res.send("Something went wrong.");
+  }
 };
+
+
+
+
+//update notes
+
+// exports.dashboardUpdateNote = async(req, res) => {
+
+// }
