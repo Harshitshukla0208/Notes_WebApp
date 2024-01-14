@@ -18,7 +18,7 @@ exports.dashboard = async (req, res) => {
 
     // Fetch all notes
     const notes = await Note.find({})
-      .sort({ createdAt: -1 })
+      .sort({ updatedAt: -1 })
       .exec();
 
     // Truncate notes using lodash
@@ -108,7 +108,6 @@ exports.dashboardDeleteNote = async (req, res) => {
 
 
 //add note
-
 exports.dashboardAddNote = async (req, res) => {
   res.render("dashboard/add", {
     layout: "../views/layouts/dashboard",
@@ -123,6 +122,37 @@ exports.dashboardAddNoteSubmit = async (req, res) => {
     await Note.create(req.body);
     res.redirect("/dashboard");
 
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// search notes function
+exports.dashboardSearch = async (req, res) => {
+  try {
+    res.render("dashboard/search", {
+      searchResults: "",
+      layout: "../views/layouts/dashboard",
+    });
+  } catch (error) {}
+};
+
+//search submission
+exports.dashboardSearchSubmit = async (req, res) => {
+  try {
+    let searchTerm = req.body.searchTerm;
+    const searchNoSpecialChars = searchTerm.replace(/[^a-zA-Z0-9 ]/g, "");
+    const searchResults = await Note.find({
+      $or: [
+        { title: { $regex: new RegExp(searchNoSpecialChars, "i") } },
+        { body: { $regex: new RegExp(searchNoSpecialChars, "i") } },
+      ],
+    }).where({ user: req.user.id });
+
+    res.render("dashboard/search", {
+      searchResults,
+      layout: "../views/layouts/dashboard",
+    });
   } catch (error) {
     console.log(error);
   }

@@ -64,11 +64,6 @@ h1,h2,h3,h5,h6{
 
 /* home */
 
-@media (min-width: 1200px){
-    .home{
-        /* background: url('../img/human-1.svg') left bottom no-repeat, url('../img/human-2.svg') right bottom no-repeat, var(--background-color); */
-    }
-}
 .home-title::before{
     content: url('../img/stars.svg');
     position: absolute;
