@@ -70,6 +70,38 @@ exports.dashboardViewNote = async (req, res) => {
 
 //update notes
 
-// exports.dashboardUpdateNote = async(req, res) => {
+exports.dashboardUpdateNote = async (req, res) => {
+  try {
+    const UpdateNote = await Note.findOneAndUpdate(
+      { _id: req.params.id },
+      {title: req.body.title, body: req.body.body, updatedAt: Date.now()},
+      {new:true}
+    ).where({ user: req.user.id });
+    console.log('Request Body:', req.body);
 
-// }
+
+    if (UpdateNote){
+      console.log("note updated", UpdateNote)
+    } else{
+      console.log("note didn't updated")
+    }
+
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+// delete note
+
+exports.dashboardDeleteNote = async (req, res) => {
+  try {
+    await Note.deleteOne({ _id: req.params.id })
+    .where({ user: req.user.id });
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.log(error);
+  }
+};

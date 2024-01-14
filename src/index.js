@@ -6,6 +6,7 @@ const session = require('express-session'); //when a user logs in they can be ke
 const passport = require('passport');
 const MongoStore = require('connect-mongo');
 const crypto = require('crypto');
+const methodOverride = require('method-override');
 
 const app = express();  
 
@@ -15,15 +16,12 @@ const secretKey = crypto.randomBytes(32).toString('hex');
 // Use express-session middleware
 app.use(session({ secret: secretKey, resave: false, saveUninitialized: false }));
 
-
-
-
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+app.use(methodOverride("_method"));
 
 app.use(express.static('public')); //static files
 
